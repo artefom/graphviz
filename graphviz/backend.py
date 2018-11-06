@@ -12,7 +12,7 @@ from . import tools
 
 __all__ = [
     'render', 'pipe', 'version', 'view',
-    'ENGINES', 'FORMATS', 'RENDERERS', 'FORMATTERS',
+    'ENGINES', 'FORMATS', 'RENDERERS', 'FORMATTERS', 'GRAPHVIZPATH',
     'ExecutableNotFound', 'RequiredArgumentError',
 ]
 
@@ -79,6 +79,8 @@ RENDERERS = {  # $ dot -T:
 
 FORMATTERS = {'cairo', 'core', 'gd', 'gdiplus', 'gdwbmp', 'xlib'}
 
+GRAPHVIZPATH = ''
+
 PLATFORM = platform.system().lower()
 
 
@@ -114,7 +116,7 @@ def command(engine, format, filepath=None, renderer=None, formatter=None):
     suffix = '.'.join(reversed(format_arg))
     format_arg = ':'.join(format_arg)
 
-    cmd = [engine, '-T%s' % format_arg]
+    cmd = [ os.path.join(GRAPHVIZPATH, engine) , '-T%s' % format_arg]
     rendered = None
     if filepath is not None:
         cmd.extend(['-O', filepath])
@@ -144,7 +146,7 @@ def run(cmd, input=None, capture_output=False, check=False, quiet=False, **kwarg
         kwargs['stdout'] = kwargs['stderr'] = subprocess.PIPE
 
     try:
-        proc = subprocess.Popen(cmd, startupinfo=get_startupinfo(), **kwargs)
+        proc = subprocess.Popen( cmd , startupinfo=get_startupinfo(), **kwargs)
     except OSError as e:
         if e.errno == errno.ENOENT:
             raise ExecutableNotFound(cmd)

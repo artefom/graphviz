@@ -28,7 +28,7 @@ from .dot import Graph, Digraph
 from .files import Source
 from .lang import nohtml
 from .backend import (render, pipe, version, view,
-    ENGINES, FORMATS, RENDERERS, FORMATTERS,
+    ENGINES, FORMATS, RENDERERS, FORMATTERS, GRAPHVIZPATH,
     ExecutableNotFound, RequiredArgumentError)
 
 __all__ = [
@@ -36,8 +36,9 @@ __all__ = [
     'Source',
     'nohtml',
     'render', 'pipe', 'version', 'view',
-    'ENGINES', 'FORMATS', 'RENDERERS', 'FORMATTERS',
+    'ENGINES', 'FORMATS', 'RENDERERS', 'FORMATTERS', 'GRAPHVIZPATH'
     'ExecutableNotFound', 'RequiredArgumentError',
+    'set_graphviz_path'
 ]
 
 __title__ = 'graphviz'
@@ -58,6 +59,15 @@ FORMATTERS = FORMATTERS
 #: Set of known output formatters for rendering (``'cairo'``, ``'gd'``, ...)
 RENDERERS = RENDERERS
 
+#: Path to graphviz executables
+GRAPHVIZPATH = GRAPHVIZPATH
+
 ExecutableNotFound = ExecutableNotFound
 
 RequiredArgumentError = RequiredArgumentError
+
+def set_graphviz_path(path):
+    global GRAPHVIZPATH
+    from . import backend
+    backend.GRAPHVIZPATH = path
+    GRAPHVIZPATH = backend.GRAPHVIZPATH
